@@ -3,9 +3,9 @@
 
 这里主要针对mxnet在实现ssd时用到的函数   
 **1.	MultiBoxPrior函数**   
-'''python
+```python  
 anchors = mx.contrib.symbol.MultiBoxPrior(data=from_layer, sizes=size_str, ratios=ratio_str, clip=clip, name="{}_anchors".format(from_name), steps=step)    
-'''
+```
 该函数在每一层的特征图的每个位置上生成对应anchor   
 (1). 输入参数解释：    
 data：要处理的特征图    
@@ -19,8 +19,10 @@ steps：每个anchor中心的步长
 (3). 生成anchors的特征层后需要接上分类层和回归层用于训练。相比于最开始的全连阶层，在ssd里分类和回归都是使用3x3卷积实现的，通道大小分别为：num_anchors * (num_classes+1)和num_anchors * 4   
 
 **2. MultiBoxTarget函数**   
+```python
 tmp = mx.contrib.symbol.MultiBoxTarget(*[anchors, label, cls_preds], overlap_threshold=.5, ignore_label=-1, negative_mining_ratio=3, minimum_negative
-_samples=0, negative_mining_thresh=.5, variances=(0.1, 0.1, 0.2, 0.2), name=" multibox_target")   
+_samples=0, negative_mining_thresh=.5, variances=(0.1, 0.1, 0.2, 0.2), name=" multibox_target")
+```
 multiboxprior生成大量anchor，且很多anchor与真实物体框的IoU非常小即负类样本，而我们只需保留那些最不确信是负类的。此函数根据每个anchor的分类置信度及给定的参数选择出用于训练的正负样本   
 (1). 输入参数解释：    
 anchors：所有层的MultiBoxPrior的输出，batch shared   
@@ -39,7 +41,9 @@ name：操作名字
 3.	odm_cls_target: 锚框的真实的标号，大小是batch_size * num_anchors    
 
 **3. MultiBoxDetection函数**    
-det = mx.contrib.symbol.MultiBoxDetection(*[cls_prob, loc_preds, anchors], nms_threshold=nms_thresh, force_suppress=force_suppress, variances=(0.1, 0.1, 0.2, 0.2), nms_topk=nms_topk, name=" detection")    
+```python
+det = mx.contrib.symbol.MultiBoxDetection(*[cls_prob, loc_preds, anchors], nms_threshold=nms_thresh, force_suppress=force_suppress, variances=(0.1, 0.1, 0.2, 0.2), nms_topk=nms_topk, name=" detection")
+```
 预测阶段，主要是refine anchor + nms    
 (1). 输入参数解释：    
 cls_prob：cls_preds经过softmax函数的输出	    
