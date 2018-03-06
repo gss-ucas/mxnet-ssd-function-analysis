@@ -3,9 +3,9 @@
 
 这里主要针对mxnet在实现ssd时用到的函数   
 **1.	MultiBoxPrior函数**   
-‘’‘python
+'''python
 anchors = mx.contrib.symbol.MultiBoxPrior(data=from_layer, sizes=size_str, ratios=ratio_str, clip=clip, name="{}_anchors".format(from_name), steps=step)    
-‘’‘
+'''
 该函数在每一层的特征图的每个位置上生成对应anchor   
 (1). 输入参数解释：    
 data：要处理的特征图    
