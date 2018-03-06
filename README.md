@@ -1,12 +1,12 @@
 # mxnet-ssd-function-analysis
 
-这里主要针对mxnet在实现ssd时用到的函数
-1.	MultiBoxPrior函数
-anchors = mx.contrib.symbol.MultiBoxPrior(data=from_layer, sizes=size_str, ratios=ratio_str, clip=clip, name="{}_anchors".format(from_name), steps=step)
-  该函数在每一层的特征图的每个位置上生成对应anchor
-  (1). 输入参数解释：
-  data：要处理的特征图
-  sizes：每层特征图对应的scales，一般大特征图对应小尺度即小物体。mxnet-ssd代码提供了计算每层size的function，refinedet每层的scale为对应stride的4倍，这些设置都根据每篇论文的设定而定。每层的size包含max_size和min_size，也可只包含min_size
+这里主要针对mxnet在实现ssd时用到的函数   
+1.	MultiBoxPrior函数   
+anchors = mx.contrib.symbol.MultiBoxPrior(data=from_layer, sizes=size_str, ratios=ratio_str, clip=clip, name="{}_anchors".format(from_name), steps=step)  
+该函数在每一层的特征图的每个位置上生成对应anchor
+(1). 输入参数解释：
+data：要处理的特征图
+sizes：每层特征图对应的scales，一般大特征图对应小尺度即小物体。mxnet-ssd代码提供了计算每层size的function，refinedet每层的scale为对应stride的4倍，这些设置都根据每篇论文的设定而定。每层的size包含max_size和min_size，也可只包含min_size
 ratios：每个anchor对应几个不同的ratio，如设置为[1, 2, 0.5]。对于ratio=2, 0.5只有min_size，对于ratio=1有max_size和min_size
 clip：是否对超出边界的anchor进行clip，一般设为false
 name：该层特征图所有anchors的名字
