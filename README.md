@@ -2,7 +2,7 @@
 
 
 这里主要针对mxnet在实现ssd时用到的函数   
-####1.	MultiBoxPrior函数   
+#### 1.	MultiBoxPrior函数   
 ```python  
 anchors = mx.contrib.symbol.MultiBoxPrior(data=from_layer, sizes=size_str, ratios=ratio_str, clip=clip, name="{}_anchors".format(from_name), steps=step)    
 ```
@@ -19,7 +19,7 @@ steps：每个anchor中心的步长
 **(3). 后续操作：**
 生成anchors的特征层后需要接上分类层和回归层用于refine anchor。相比于最开始的全连接层，在ssd里分类和回归都是使用3x3卷积实现的，通道大小分别为：num_anchors * (num_classes+1)和num_anchors * 4   
 
-####2. MultiBoxTarget函数   
+#### 2. MultiBoxTarget函数   
 ```python
 tmp = mx.contrib.symbol.MultiBoxTarget(*[anchors, label, cls_preds], overlap_threshold=.5, ignore_label=-1, negative_mining_ratio=3, minimum_negative
 _samples=0, negative_mining_thresh=.5, variances=(0.1, 0.1, 0.2, 0.2), name=" multibox_target")
@@ -42,7 +42,7 @@ odm_loc_target = tmp[0]: 预测的边框跟真实边框的偏移(具体公式见
 odm_loc_target_mask = tmp[1]: 用来遮掩不需要的负类锚框的掩码，大小同上    
 odm_cls_target = tmp[2]: 锚框的真实的标号，大小是batch_size x num_anchors    
 
-####3. MultiBoxDetection函数    
+#### 3. MultiBoxDetection函数    
 ```python
 det = mx.contrib.symbol.MultiBoxDetection(*[cls_prob, loc_preds, anchors], nms_threshold=nms_thresh, force_suppress=force_suppress, variances=(0.1, 0.1, 0.2, 0.2), nms_topk=nms_topk, name=" detection")
 ```
@@ -58,13 +58,13 @@ nms_topk：根据分类置信度选择nms_topk个anchors，在这些anchors里�
 **(2). 输出形式：**
 输出所有边框，每个边框由[class_id, confidence, xmin, ymin, xmax, ymax]表示。其中class_id=-1表示要么这个边框被预测只含有背景，或者被去重掉了。这些边框的排列顺序是按confidence降序排列的，框的坐标为归一化形式
 
-####4. SoftmaxOutput函数：
+#### 4. SoftmaxOutput函数：
 ```python
 cls_prob =mx.symbol.SoftmaxOutput(data=cls_preds,label=cls_target, ignore_label=-1,use_ignore=True,grad_scale=1.,multi_output=True,normalization='valid',name="cls_prob")
 ```
 (1). 该函数计算交叉熵损失对于softmax输出的梯度，返回cls_prob为softmax函数的输出    
 (2). 最小化交叉熵损失时常用此语句，group包含cls_prob时即可最小化    
-####5. MakeLoss函数
+#### 5. MakeLoss函数
 ```python
 loc_loss_ =
 mx.symbol.smooth_l1(name="loc_loss_", data=loc_target_mask *
