@@ -37,7 +37,7 @@ negative_mining_thresh：用于negative mining的阈值
 variances：除以variance就是对prediction和gt的误差进行放大，从而增加loss，增大梯度，加速收敛。variances四个值分别为(vx, vy, vw, vh)，分别对应anchor中心的x、y坐标和anchor长、宽    
 name：操作名字    
 **(2). 输出形式：**    
-输出tmp包含三个值：
+输出tmp包含三个值：  
 odm_loc_target = tmp[0]: 预测的边框跟真实边框的偏移(具体公式见ssd论文)，大小是batch_size x (num_anchors x 4)    
 odm_loc_target_mask = tmp[1]: 用来遮掩不需要的负类锚框的掩码，大小同上    
 odm_cls_target = tmp[2]: 锚框的真实的标号，大小是batch_size x num_anchors    
